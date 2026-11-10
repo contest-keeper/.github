@@ -1,0 +1,32 @@
+name: PR title
+
+on:
+  workflow_call:
+
+permissions:
+  pull-requests: read
+
+jobs:
+  pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            perf
+            refactor
+            docs
+            test
+            build
+            ci
+            chore
+          requireScope: false
+          disallowScopes: '.*'
+          subjectPattern: ^[a-z].*[^.]$
+          subjectPatternError: |
+            Start "{subject}" with a lowercase verb and do not end it with a period,
+            e.g. "feat: add ESP config reader".

@@ -1,0 +1,12 @@
+name: Web
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  web:
+    uses: contest-keeper/.github/.github/workflows/web-ci.yml@main
+    with:
+      working-directory: .
