@@ -1,0 +1,24 @@
+{
+  "packageManager": "pnpm@10",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "format": "prettier --write .",
+    "lint": "prettier --check . && eslint .",
+    "check": "svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@eslint/js": "*",
+    "eslint": "*",
+    "eslint-config-prettier": "*",
+    "eslint-plugin-svelte": "*",
+    "globals": "*",
+    "prettier": "*",
+    "prettier-plugin-svelte": "*",
+    "svelte-check": "*",
+    "typescript": "*",
+    "typescript-eslint": "*",
+    "vitest": "*"
+  }
+}

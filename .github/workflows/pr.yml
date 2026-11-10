@@ -7,3 +7,5 @@ on:
 jobs:
   title:
     uses: ./.github/workflows/pr-title.yml
+  common:
+    uses: ./.github/workflows/common-ci.yml
