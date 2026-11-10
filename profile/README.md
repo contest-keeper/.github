@@ -1,4 +1,4 @@
-Contest Keeper helps contest organizers check that submissions come from the official contest machines.
+Contest Keeper helps contest organizers check that submissions are genuine: written by the contestant, without AI.
 
 - [ck-os](https://github.com/contest-keeper/ck-os) - bootable system for contest machines
 - [ck-forge](https://github.com/contest-keeper/ck-forge) - prepares the USB sticks
