@@ -1,0 +1,11 @@
+{
+  "name": "contest-keeper",
+  "owner": { "name": "Contest Keeper" },
+  "plugins": [
+    {
+      "name": "ck",
+      "source": "./claude-plugin",
+      "description": "Contest Keeper workflow: next plan step, commits and PRs"
+    }
+  ]
+}
