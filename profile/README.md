@@ -1,3 +1,5 @@
+<img src="logo.svg" width="96" alt="Contest Keeper">
+
 Contest Keeper helps contest organizers check that submissions are genuine: written by the contestant, without AI.
 
 - [ck-os](https://github.com/contest-keeper/ck-os) - bootable system for contest machines
