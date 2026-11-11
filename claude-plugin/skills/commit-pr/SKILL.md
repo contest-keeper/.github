@@ -16,7 +16,7 @@ Never commit to `main`. If on `main`, create a branch first:
 
 Run the repository's checks before committing and fix what fails
 (Rust: `cargo fmt --all`, `cargo clippy --all-targets -- -D warnings`, `cargo test`;
-web: `npm run lint`, `npm run check`).
+web: `pnpm lint`, `pnpm check`, `pnpm test`).
 
 ## 3. Commit
 
