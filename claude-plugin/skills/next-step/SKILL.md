@@ -19,13 +19,13 @@ with `gh api repos/contest-keeper/ck-website/contents/plan/...` or ask the user 
 1. If the user named a step (e.g. `A.3`), use it. Otherwise take the first unchecked step in
    `plan/README.md` whose code lives in the current repository and whose "Depends on" steps are done.
    Tell the user which step you picked and wait for a yes.
-2. Read `context.md` and the step file. Do only what the step's "Small steps" describe; anything
+2. Read `context.md`, the step file, and the code conventions (`conventions/` in `contest-keeper/.github`) for the languages you touch. Do only what the step's "Small steps" describe; anything
    under "Out of scope" stays out.
 3. Branch from an up-to-date `main`: `feature/<step-id>-<short-name>` (e.g. `feature/a3-image-tool`),
    or `fix/`, `chore/`, `docs/` when that fits better.
 4. Work through the small steps in order. After each one, build and run the checks
    (Rust: `cargo fmt --all`, `cargo clippy --all-targets -- -D warnings`, `cargo test`;
-   web: `npm run lint`, `npm run check`).
+   web: `pnpm lint`, `pnpm check`, `pnpm test`).
 5. Check every item under "Done when". If one cannot be checked here (real hardware, a contest
    account, the user's password), say so instead of marking it done.
 6. Hand over to `/ck:commit-pr` for the commit and PR.

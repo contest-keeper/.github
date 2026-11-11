@@ -1,15 +1,35 @@
 # Templates
 
-Files to copy into a repository when it gets its first code.
+Files to copy into a repository when it gets its first code. Every repository already has
+`.editorconfig`, `.gitattributes`, `.gitignore`, `CODEOWNERS`, `CLAUDE.md`, Dependabot and the PR checks.
 
-| File | Goes to | For |
-|---|---|---|
-| `rust/rustfmt.toml` | `rustfmt.toml` | Rust repos |
-| `rust/deny.toml` | `deny.toml` | Rust repos |
-| `rust/ci.yml` | `.github/workflows/ci.yml` | Rust repos |
-| `web/ci.yml` | `.github/workflows/web.yml` | repos with a Svelte app |
-| `release.yml` | `.github/workflows/release.yml` | every repo that ships releases |
-| `release-please-config.json` | `release-please-config.json` | same; set `release-type` (`rust`, `node` or `simple`) |
-| `.release-please-manifest.json` | `.release-please-manifest.json` | same |
+## Rust repositories
 
-Then add the `cargo` or `npm` ecosystem to the repository's `.github/dependabot.yml`.
+| File | Goes to |
+|---|---|
+| `rust/Cargo.toml` | `Cargo.toml` (workspace: shared lints and package fields; replace `REPO`) |
+| `rust/rust-toolchain.toml` | `rust-toolchain.toml` |
+| `rust/rustfmt.toml`, `rust/clippy.toml`, `rust/deny.toml` | repository root |
+| `rust/ci.yml` | `.github/workflows/ci.yml` |
+| `vscode/rust/*` | `.vscode/` |
+
+## Web projects (TypeScript + Svelte)
+
+| File | Goes to |
+|---|---|
+| `web/package-scripts.json` | merge into `package.json` (scripts, `packageManager`, dev tools) |
+| `web/.prettierrc.json`, `web/eslint.config.js`, `web/tsconfig.json` | project root |
+| `web/.nvmrc` | project root |
+| `web/ci.yml` | `.github/workflows/web.yml` |
+| `vscode/web/*` | `.vscode/` |
+
+## Releases
+
+| File | Goes to |
+|---|---|
+| `release.yml` | `.github/workflows/release.yml` |
+| `release-please-config.json` | root; set `release-type` (`rust`, `node` or `simple`) |
+| `.release-please-manifest.json` | root |
+
+After copying, add the `cargo` or `npm` ecosystem to `.github/dependabot.yml`, and add the new CI
+check to the `main` ruleset.
