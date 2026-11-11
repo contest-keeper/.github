@@ -21,7 +21,7 @@ with `gh api repos/contest-keeper/ck-website/contents/plan/...` or ask the user 
    Tell the user which step you picked and wait for a yes.
 2. Read `context.md`, the step file, and the code conventions (`conventions/` in `contest-keeper/.github`) for the languages you touch. Do only what the step's "Small steps" describe; anything
    under "Out of scope" stays out.
-3. Branch from an up-to-date `main`: `feature/<step-id>-<short-name>` (e.g. `feature/a3-image-tool`),
+3. Branch from an up-to-date `develop`: `feature/<step-id>-<short-name>` (e.g. `feature/a3-image-tool`),
    or `fix/`, `chore/`, `docs/` when that fits better.
 4. Work through the small steps in order. After each one, build and run the checks
    (Rust: `cargo fmt --all`, `cargo clippy --all-targets -- -D warnings`, `cargo test`;

@@ -9,7 +9,7 @@ The conventions are in `CONTRIBUTING.md` of `contest-keeper/.github`. In short:
 
 ## 1. Branch
 
-Never commit to `main`. If on `main`, create a branch first:
+Never commit to `main` or `develop`. Create work branches from `develop`:
 `feature/`, `fix/`, `chore/`, `docs/` or `epic/` + lowercase-dashed name.
 
 ## 2. Checks
@@ -29,8 +29,9 @@ web: `pnpm lint`, `pnpm check`, `pnpm test`).
 
 ## 4. Pull request
 
-- Push the branch, then `gh pr create`.
-- The PR title follows the same `type: subject` format - it becomes the squash commit on `main`
+- Push the work branch, then use `gh pr create --base develop`.
+- Only same-repository `develop` promotion PRs target `main`; merge those with a merge commit.
+- The PR title follows the same `type: subject` format - it becomes the squash commit on `develop`
   and CI checks it.
 - Body: the repository's PR template (What / Why / Closes / How it was tested). Plain, short
   sentences; no emoji, no marketing, no headings beyond the template's.
