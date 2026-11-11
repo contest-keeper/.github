@@ -42,8 +42,12 @@ Each repository is versioned with [SemVer](https://semver.org). Releases are cut
 release-please: it keeps a release PR open with the changelog built from `feat` and `fix`
 commits, and merging that PR tags the version and runs the release pipeline.
 
-## Code style
+## Code
 
-- Rust: `cargo fmt`, `cargo clippy -- -D warnings`, `cargo deny check`.
-- TypeScript / Svelte: Prettier, ESLint, `svelte-check`.
-- Every repository has an `.editorconfig`; files use LF line endings.
+Read the [code conventions](conventions/README.md). Before pushing:
+
+- Rust: `cargo fmt --all`, `cargo clippy --all-targets -- -D warnings`, `cargo test`, `cargo deny check`.
+- TypeScript / Svelte: `pnpm format`, `pnpm lint`, `pnpm check`, `pnpm test`.
+- Shell: `shellcheck` and `shfmt -i 2 -ci`.
+
+Every repository has an `.editorconfig`; files use LF line endings.
