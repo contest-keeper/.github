@@ -15,6 +15,8 @@ Crates and packages with their own folder get a short README too.
 
 - Comment sparingly and only where it really helps: explain why, not what. Skip comments that repeat the code.
   Link the plan step or issue when a choice needs background.
+- Shell scripts and other hard-to-read formats (systemd units, `debugfs` commands, regular expressions) may keep
+  more comments, because the code does not explain itself there.
 - `TODO(#123): ...` always with an issue number; no loose TODOs.
 - Delete commented-out code; Git remembers it.
 
