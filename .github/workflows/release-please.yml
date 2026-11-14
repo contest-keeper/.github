@@ -1,7 +1,15 @@
 name: Release
 
+# Pull requests opened with the built-in token start no workflows, so the release PR would never get its
+# required checks. Give the caller's RELEASE_PLEASE_TOKEN (a token that may write contents and pull
+# requests) as "token". Without it the built-in token is used and the checks must be started by hand.
+
 on:
   workflow_call:
+    secrets:
+      token:
+        description: Token release-please uses to open the release PR, so that the PR runs its checks.
+        required: false
     outputs:
       release_created:
         value: ${{ jobs.release-please.outputs.release_created }}
@@ -20,4 +28,6 @@ jobs:
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - id: release
-        uses: googleapis/release-please-action@v5
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
+        with:
+          token: ${{ secrets.token || github.token }}
