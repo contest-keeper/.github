@@ -2,6 +2,12 @@ name: Rust CI
 
 on:
   workflow_call:
+    inputs:
+      postgres:
+        description: Start a throwaway PostgreSQL and set CK_TEST_DATABASE_URL for the tests.
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -14,13 +20,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
+      # Installs the toolchain pinned in rust-toolchain.toml, once, instead of a floating stable
+      # that rustup would replace with the pin on the first cargo call.
+      - run: rustup toolchain install --profile minimal
       - uses: Swatinem/rust-cache@v2
+      - name: Start PostgreSQL for the store tests
+        if: inputs.postgres
+        run: |
+          docker run -d --name ck-test-db -p 54329:5432 \
+            -e POSTGRES_PASSWORD=ck-test-only -e POSTGRES_DB=ckhub postgres:16-alpine
+          for _ in $(seq 1 30); do
+            docker exec ck-test-db pg_isready -U postgres -d ckhub && break
+            sleep 1
+          done
+          docker exec ck-test-db pg_isready -U postgres -d ckhub
+          echo "CK_TEST_DATABASE_URL=postgres://postgres:ck-test-only@127.0.0.1:54329/ckhub" >> "$GITHUB_ENV"
       - run: cargo fmt --all --check
-      - run: cargo clippy --all-targets --all-features -- -D warnings
-      - run: cargo test --all-features
+      - run: cargo clippy --locked --all-targets --all-features -- -D warnings
+      - run: cargo test --locked --all-features
 
   deny:
     runs-on: ubuntu-latest
