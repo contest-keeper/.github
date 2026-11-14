@@ -24,7 +24,7 @@ These apply to every Contest Keeper repository. Git, PR and release rules are in
    well-known ones (`id`, `url`, `http`, `ck`).
 4. **Fail loudly and early.** Validate input at the boundary, return clear errors, never swallow one.
 5. **No secrets, no personal data in code, logs or Git.** See [security.md](security.md).
-6. **Every change is tested** at the level that matches it. See [testing.md](testing.md).
+6. **Test the key things**, at the level that matches them, not every line. See [testing.md](testing.md).
 7. **English everywhere:** code, comments, docs, commit messages, UI strings (translations come later).
 8. **Formatters decide formatting.** Don't argue style a tool can fix; run `cargo fmt` / `pnpm format`.
 9. **Fewer dependencies.** Add a crate or package only when it saves real work and is maintained.

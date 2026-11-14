@@ -47,7 +47,11 @@
 
 ## Style
 
-- Comments explain *why*. The code shows *what*.
-- `///` doc comments on every public item in library crates; a short example where useful.
+- Comment sparingly, only at key points. Clear names and small functions come first; a comment is for what the code can't say:
+  a hidden constraint, a surprising choice, a workaround, a subtle invariant. It explains *why*, never *what*.
+- No comments that repeat the code, label sections or narrate steps.
+- `///` on a public item only when the name and signature don't tell the whole story: units, edge cases,
+  invariants, errors a caller must handle. Don't restate the name ("Returns the id"). Add a short example where it helps.
+  Each library crate keeps a one-line `//!` that says what it is for.
 - `unsafe` only with a `// SAFETY:` comment, and only if there is no safe way.
 - Features and `cfg` flags are named in kebab-case and documented in the crate README.

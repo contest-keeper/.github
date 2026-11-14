@@ -2,9 +2,16 @@
 
 ## What to test
 
-- **Pure logic** (rules, parsing, matching, signing): unit tests next to the code. Cover the edge cases
-  and the failure cases, not only the happy path.
-- **Boundaries** (HTTP handlers, database, ICAP, file formats): integration tests in `tests/`, against
+Test the key things, not everything. A small suite that covers what matters beats a large one that
+buries the code. Every test must earn its place: if it would not catch a real mistake, don't write it.
+
+- **Test:** logic where a mistake is costly or easy to make (signing, matching, parsing input from outside,
+  validation rules, security checks), the main behaviour of each feature, and the failure cases that matter.
+- **Don't test:** plain data types, getters, defaults, derived code (`serde`, `Debug`), simple wrappers,
+  or anything the compiler already guarantees. One round-trip test per wire format is enough.
+- One test per behaviour. Don't write many near-identical tests: use a table of cases inside one test.
+- **Pure logic** (rules, parsing, matching, signing): unit tests next to the code.
+- **Boundaries** (HTTP handlers, database, ICAP, file formats): a few integration tests in `tests/`, against
   a real PostgreSQL (container in CI), never a mock database.
 - **Whole system** (stick boots, reports, Hub matches): the VM test in `ck-os`; run locally, not in CI,
   because it needs the contest image.
