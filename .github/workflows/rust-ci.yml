@@ -23,7 +23,7 @@ jobs:
       # Installs the toolchain pinned in rust-toolchain.toml, once, instead of a floating stable
       # that rustup would replace with the pin on the first cargo call.
       - run: rustup toolchain install --profile minimal
-      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
+      - uses: Swatinem/rust-cache@v2
       - name: Start PostgreSQL for the store tests
         if: inputs.postgres
         run: |
@@ -45,4 +45,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2
+      - uses: EmbarkStudios/cargo-deny-action@v2
