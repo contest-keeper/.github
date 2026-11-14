@@ -12,7 +12,42 @@ jobs:
   release-please:
     uses: contest-keeper/.github/.github/workflows/release-please.yml@main
 
-  # Build and upload release files here, e.g.:
+  # Release files (Windows installer, binaries, ...): build them, upload them as an artifact,
+  # then let the shared workflow checksum, attest and attach them to the release.
   # build:
   #   needs: release-please
   #   if: needs.release-please.outputs.release_created == 'true'
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v7
+  #       with:
+  #         ref: ${{ needs.release-please.outputs.tag_name }}
+  #     # ... build into ./out ...
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: release-files
+  #         path: out/*
+  #         if-no-files-found: error
+  # publish:
+  #   needs: [release-please, build]
+  #   permissions:
+  #     contents: write
+  #     id-token: write
+  #     attestations: write
+  #   uses: contest-keeper/.github/.github/workflows/release-assets.yml@main
+  #   with:
+  #     tag_name: ${{ needs.release-please.outputs.tag_name }}
+  #     artifact_name: release-files
+
+  # A container image instead (needs a Dockerfile at the repository root):
+  # image:
+  #   needs: release-please
+  #   if: needs.release-please.outputs.release_created == 'true'
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #     id-token: write
+  #     attestations: write
+  #   uses: contest-keeper/.github/.github/workflows/release-container.yml@main
+  #   with:
+  #     tag_name: ${{ needs.release-please.outputs.tag_name }}

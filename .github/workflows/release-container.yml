@@ -1,0 +1,66 @@
+name: Release container
+
+# Builds a Dockerfile and publishes it to GitHub Container Registry as
+# ghcr.io/<owner>/<repo>:<version> and :latest, with an SBOM and a signed build provenance
+# attestation. Call it after release-please created a release.
+
+on:
+  workflow_call:
+    inputs:
+      tag_name:
+        description: Release tag such as v1.2.3. The image version is the tag without the v.
+        required: true
+        type: string
+      context:
+        description: Docker build context.
+        required: false
+        default: .
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag_name }}
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{version}},value=${{ inputs.tag_name }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ inputs.tag_name }}
+            type=raw,value=latest
+          labels: |
+            org.opencontainers.image.licenses=Apache-2.0
+      - id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.context }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          sbom: true
+          provenance: mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ghcr.io/${{ github.repository }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
