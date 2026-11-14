@@ -1,21 +1,30 @@
 name: Release container
 
-# Builds a Dockerfile and publishes it to GitHub Container Registry as
-# ghcr.io/<owner>/<repo>:<version> and :latest, with an SBOM and a signed build provenance
-# attestation. Call it after release-please created a release.
+# Builds a Dockerfile and publishes it to GitHub Container Registry, with an SBOM and a signed
+# build provenance attestation.
+#
+#   - With tag_name (a release): ghcr.io/<owner>/<repo>:<version>, :<major>.<minor> and :latest.
+#   - Without it (a push to develop): :develop and :sha-<first 12 of the commit>.
+#
+# The output image_tag is the exact, unique tag to deploy (the version, or sha-<12>).
 
 on:
   workflow_call:
     inputs:
       tag_name:
-        description: Release tag such as v1.2.3. The image version is the tag without the v.
-        required: true
+        description: Release tag such as v1.2.3. Leave empty to publish a develop build of the current commit.
+        required: false
+        default: ""
         type: string
       context:
         description: Docker build context.
         required: false
         default: .
         type: string
+    outputs:
+      image_tag:
+        description: The unique tag that was published (a version, or sha-<12>).
+        value: ${{ jobs.image.outputs.image_tag }}
 
 permissions:
   contents: read
@@ -28,10 +37,36 @@ jobs:
       packages: write
       id-token: write
       attestations: write
+    outputs:
+      image_tag: ${{ steps.tags.outputs.unique }}
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ inputs.tag_name }}
+          ref: ${{ inputs.tag_name || github.sha }}
+      - id: tags
+        env:
+          TAG: ${{ inputs.tag_name }}
+        run: |
+          if [ -n "$TAG" ]; then
+            version="${TAG#v}"
+            {
+              echo "unique=${version}"
+              echo "list<<EOF"
+              echo "type=raw,value=${version}"
+              echo "type=raw,value=${version%.*}"
+              echo "type=raw,value=latest"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            short="sha-$(git rev-parse --short=12 HEAD)"
+            {
+              echo "unique=${short}"
+              echo "list<<EOF"
+              echo "type=raw,value=${short}"
+              echo "type=raw,value=develop"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
       - uses: docker/setup-buildx-action@v3
       - uses: docker/login-action@v3
         with:
@@ -43,9 +78,9 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
-            type=semver,pattern={{version}},value=${{ inputs.tag_name }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ inputs.tag_name }}
-            type=raw,value=latest
+            ${{ steps.tags.outputs.list }}
+          flavor: |
+            latest=false
           labels: |
             org.opencontainers.image.licenses=Apache-2.0
       - id: build
