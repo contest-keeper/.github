@@ -4,8 +4,17 @@ name: Release
 # required checks. Give the caller's RELEASE_PLEASE_TOKEN (a token that may write contents and pull
 # requests) as "token". Without it the built-in token is used and the checks must be started by hand.
 
+# Only develop may be promoted to main, so a repo that follows that rule runs this on develop and
+# passes "target-branch: develop": the release PR then goes into develop and the tag is made there.
+
 on:
   workflow_call:
+    inputs:
+      target-branch:
+        description: Branch the release PR is opened against. Empty means the default branch.
+        type: string
+        required: false
+        default: ''
     secrets:
       token:
         description: Token release-please uses to open the release PR, so that the PR runs its checks.
@@ -31,3 +40,4 @@ jobs:
         uses: googleapis/release-please-action@v5
         with:
           token: ${{ secrets.token || github.token }}
+          target-branch: ${{ inputs.target-branch }}
