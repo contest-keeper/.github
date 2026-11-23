@@ -50,6 +50,11 @@
 - Comment sparingly, only at key points. Clear names and small functions come first; a comment is for what the code can't say:
   a hidden constraint, a surprising choice, a workaround, a subtle invariant. It explains *why*, never *what*.
 - No comments that repeat the code, label sections or narrate steps.
+- **Remove** comments that restate the code, describe history ("used to", "moved from", "added for") or are stale
+  (they describe code that changed). Git keeps the history.
+- **Keep** "why" comments and guard comments. A guard comment says what a check prevents
+  (`// reject a second claim: the first boot key must not change`), so nobody removes the check as clutter.
+- **Shorten** long doc blocks to what a caller needs: units, edge cases, errors. Long background goes in the docs or the decision record.
 - `///` on a public item only when the name and signature don't tell the whole story: units, edge cases,
   invariants, errors a caller must handle. Don't restate the name ("Returns the id"). Add a short example where it helps.
   Each library crate keeps a one-line `//!` that says what it is for.

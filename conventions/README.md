@@ -11,6 +11,7 @@ These apply to every Contest Keeper repository. Git, PR and release rules are in
 | [database.md](database.md) | PostgreSQL schema and migrations |
 | [system.md](system.md) | Shell scripts, systemd units and the image patch |
 | [testing.md](testing.md) | What to test and how |
+| [agents.md](agents.md) | House rules for people and agents (copied into each `AGENTS.md`) |
 | [security.md](security.md) | Secrets, personal data, logging, dependencies |
 | [docs.md](docs.md) | READMEs, comments, decision records |
 
