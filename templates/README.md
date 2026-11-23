@@ -7,10 +7,10 @@ Files to copy into a repository when it gets its first code. Every repository al
 
 | File | Goes to |
 |---|---|
-| `rust/Cargo.toml` | `Cargo.toml` (workspace: shared lints and package fields; replace `REPO`) |
+| `rust/Cargo.toml` | `Cargo.toml` (workspace: shared lints, dev and release profiles, package fields; replace `REPO`) |
 | `rust/rust-toolchain.toml` | `rust-toolchain.toml` |
 | `rust/rustfmt.toml`, `rust/clippy.toml`, `rust/deny.toml` | repository root |
-| `rust/ci.yml` | `.github/workflows/ci.yml` |
+| `rust/ci.yml` | `.github/workflows/ci.yml` (runs the tests with `cargo-nextest`) |
 | `vscode/rust/*` | `.vscode/` |
 
 ## Web projects (TypeScript + Svelte)
