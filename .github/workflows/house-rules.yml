@@ -1,0 +1,63 @@
+name: House rules
+
+# Checks that the shared block in a repository's AGENTS.md is identical to the one in
+# conventions/agents.md of the .github repository (compared by sha256), and that CLAUDE.md
+# only imports AGENTS.md. Call it from each repository's PR workflow.
+
+on:
+  workflow_call:
+    inputs:
+      agents-file:
+        description: Path of the repository's AGENTS.md.
+        required: false
+        default: AGENTS.md
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  house-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: repo
+      - uses: actions/checkout@v7
+        with:
+          repository: contest-keeper/.github
+          ref: main
+          path: shared
+      - name: Compare the shared block
+        env:
+          AGENTS_FILE: ${{ inputs.agents-file }}
+        run: |
+          set -eu
+          block() {
+            sed -n '/<!-- ck-house-rules:start -->/,/<!-- ck-house-rules:end -->/p' "$1" | sed '1d;$d'
+          }
+          expected_file=shared/conventions/agents.md
+          actual_file="repo/${AGENTS_FILE}"
+          if [ ! -f "$actual_file" ]; then
+            echo "::error::${AGENTS_FILE} is missing. Copy the block between the ck-house-rules markers from conventions/agents.md."
+            exit 1
+          fi
+          expected=$(block "$expected_file" | sha256sum | cut -d' ' -f1)
+          actual=$(block "$actual_file" | sha256sum | cut -d' ' -f1)
+          if [ -z "$(block "$expected_file")" ]; then
+            echo "::error::No house-rules block found in conventions/agents.md."
+            exit 1
+          fi
+          if [ "$expected" != "$actual" ]; then
+            echo "::error::The house-rules block in ${AGENTS_FILE} differs from conventions/agents.md (sha256 ${actual} vs ${expected})."
+            echo "Do not edit the block here. Change conventions/agents.md in contest-keeper/.github, then copy the block over."
+            exit 1
+          fi
+          echo "House-rules block matches (sha256 ${expected})."
+      - name: Check that CLAUDE.md imports AGENTS.md
+        run: |
+          set -eu
+          if [ ! -f repo/CLAUDE.md ] || [ "$(tr -d '[:space:]' < repo/CLAUDE.md)" != "@AGENTS.md" ]; then
+            echo "::error::CLAUDE.md must contain only the line @AGENTS.md."
+            exit 1
+          fi
