@@ -9,7 +9,7 @@ repository = "https://github.com/contest-keeper/REPO"
 rust-version = "1.87"
 
 [workspace.lints.rust]
-unsafe_code = "deny"
+unsafe_code = "forbid"
 unused_qualifications = "warn"
 
 [workspace.lints.clippy]
@@ -24,11 +24,24 @@ must_use_candidate = "allow"
 missing_errors_doc = "allow"
 missing_panics_doc = "allow"
 
+# Fast edit-test loop: our crates keep line tables for backtraces only,
+# dependencies are optimised once and carry no debug info.
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+opt-level = 2
+debug = false
+
 [profile.release]
 lto = "thin"
 codegen-units = 1
 strip = true
 
+# `unsafe_code = "forbid"` cannot be lowered inside a crate. A crate that really needs `unsafe`
+# (Windows or disk FFI) skips `[lints] workspace = true`, repeats the lints it wants and sets
+# `unsafe_code = "deny"` with a `// SAFETY:` comment at each use. Say so in its README.
+#
 # In each crate's Cargo.toml:
 #
 # [package]
