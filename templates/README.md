@@ -23,6 +23,15 @@ Files to copy into a repository when it gets its first code. Every repository al
 | `web/ci.yml` | `.github/workflows/web.yml` |
 | `vscode/web/*` | `.vscode/` |
 
+## Checks
+
+| File | Goes to |
+|---|---|
+| `tools/check-secrets` | `tools/check-secrets` (scans what git would commit for keys and tokens; run before committing) |
+| `tools/check-git-sources` | `tools/check-git-sources` (every `Cargo.lock` source is crates.io or the contest-keeper org) |
+
+Keep the copies identical; change them here first.
+
 ## House rules
 
 | File | Goes to |
