@@ -23,6 +23,12 @@ Files to copy into a repository when it gets its first code. Every repository al
 | `web/ci.yml` | `.github/workflows/web.yml` |
 | `vscode/web/*` | `.vscode/` |
 
+## House rules
+
+| File | Goes to |
+|---|---|
+| `house-rules.yml` | `.github/workflows/house-rules.yml` (checks `AGENTS.md` against `conventions/agents.md`; add it to the `develop` ruleset when every repository passes) |
+
 ## Releases
 
 | File | Goes to |
