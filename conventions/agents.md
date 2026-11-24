@@ -49,7 +49,7 @@ translations come later, and the Forge window follows its own plan.
 ## Computing the hash
 
 ```sh
-sed -n '/<!-- ck-house-rules:start -->/,/<!-- ck-house-rules:end -->/p' conventions/agents.md \
+sed -n '/^<!-- ck-house-rules:start -->$/,/^<!-- ck-house-rules:end -->$/p' conventions/agents.md \
   | sed '1d;$d' | sha256sum
 ```
 
