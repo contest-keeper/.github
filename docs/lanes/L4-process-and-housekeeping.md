@@ -18,7 +18,7 @@ Needs the account question (`gh pr list` is read-only but still `gh`).
 - [x] Local branches in the six repos, same classification; include the plan's candidates (ck-forge `feature/windows-updater`,
   `feature/auto-update`, `fix/show-checking-while-writing`; ck-hub `fix/review-fixes`, `feature/register-sticks`,
   `feature/organizer-accounts`; ck-os `feature/welcome-text`, `feature/image-patch-agent`).
-- [x] Stray folders in `D:\contest-keeper`: `ck-hub-setup` (only a `.git`, a duplicate of ck-infra), `ck-os;C` (mis-typed), `_archive/ck-hub-setup`,
+- [x] Stray folders in `D:\contest-keeper`: `ck-hub-setup` (only a `.git`, a duplicate of ck-infra), `ck-os;C` (mistyped), `_archive/ck-hub-setup`,
   `pipeline-scratch`, `review/`: what each is, size, whether anything is not elsewhere.
 - [x] Disk: free space on `C:` and `D:`; sizes of `D:\ck-wt`, `D:\ck-images`, `target/`, `target-dev/`.
 - [x] Open PRs in all 7 repos with CI state; green ones ready to squash-merge (do not merge).
