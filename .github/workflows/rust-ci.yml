@@ -3,6 +3,11 @@ name: Rust CI
 on:
   workflow_call:
     inputs:
+      nextest:
+        description: Run the tests with cargo-nextest (plus the doctests) instead of cargo test.
+        required: false
+        default: false
+        type: boolean
       postgres:
         description: Start a throwaway PostgreSQL and set CK_TEST_DATABASE_URL for the tests.
         required: false
@@ -38,9 +43,22 @@ jobs:
           done
           docker exec ck-test-db pg_isready -h 127.0.0.1 -U postgres -d ckhub
           echo "CK_TEST_DATABASE_URL=postgres://postgres:ck-test-only@127.0.0.1:54329/ckhub" >> "$GITHUB_ENV"
+          # Tests must fail, not pass silently, when the database is missing (conventions/testing.md).
+          echo "CK_TEST_DATABASE_REQUIRED=1" >> "$GITHUB_ENV"
       - run: cargo fmt --all --check
       - run: cargo clippy --locked --all-targets --all-features -- -D warnings
+      - name: Install cargo-nextest
+        if: inputs.nextest
+        uses: taiki-e/install-action@v2
+        with:
+          tool: nextest
       - run: cargo test --locked --all-features
+        if: ${{ !inputs.nextest }}
+      # nextest does not run doctests, so they run on their own.
+      - run: cargo nextest run --locked --all-features
+        if: inputs.nextest
+      - run: cargo test --locked --all-features --doc
+        if: inputs.nextest
 
   deny:
     runs-on: ubuntu-latest

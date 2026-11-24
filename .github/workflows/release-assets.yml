@@ -28,7 +28,7 @@ jobs:
       id-token: write
       attestations: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.artifact_name }}
           path: assets
@@ -39,7 +39,7 @@ jobs:
           test -s ../files.txt
           xargs -a ../files.txt sha256sum > SHA256SUMS.txt
           cat SHA256SUMS.txt
-      - uses: actions/attest-build-provenance@v3
+      - uses: actions/attest-build-provenance@v4
         with:
           subject-checksums: assets/SHA256SUMS.txt
       - name: Upload to the release

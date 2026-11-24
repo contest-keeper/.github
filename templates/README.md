@@ -7,10 +7,10 @@ Files to copy into a repository when it gets its first code. Every repository al
 
 | File | Goes to |
 |---|---|
-| `rust/Cargo.toml` | `Cargo.toml` (workspace: shared lints and package fields; replace `REPO`) |
+| `rust/Cargo.toml` | `Cargo.toml` (workspace: shared lints, dev and release profiles, package fields; replace `REPO`) |
 | `rust/rust-toolchain.toml` | `rust-toolchain.toml` |
 | `rust/rustfmt.toml`, `rust/clippy.toml`, `rust/deny.toml` | repository root |
-| `rust/ci.yml` | `.github/workflows/ci.yml` |
+| `rust/ci.yml` | `.github/workflows/ci.yml` (runs the tests with `cargo-nextest`) |
 | `vscode/rust/*` | `.vscode/` |
 
 ## Web projects (TypeScript + Svelte)
@@ -22,6 +22,21 @@ Files to copy into a repository when it gets its first code. Every repository al
 | `web/.nvmrc` | project root |
 | `web/ci.yml` | `.github/workflows/web.yml` |
 | `vscode/web/*` | `.vscode/` |
+
+## Checks
+
+| File | Goes to |
+|---|---|
+| `tools/check-secrets` | `tools/check-secrets` (scans what git would commit for keys and tokens; run before committing) |
+| `tools/check-git-sources` | `tools/check-git-sources` (every `Cargo.lock` source is crates.io or the contest-keeper org) |
+
+Keep the copies identical; change them here first.
+
+## House rules
+
+| File | Goes to |
+|---|---|
+| `house-rules.yml` | `.github/workflows/house-rules.yml` (checks `AGENTS.md` against `conventions/agents.md`; add it to the `develop` ruleset when every repository passes) |
 
 ## Releases
 
