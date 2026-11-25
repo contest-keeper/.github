@@ -4,7 +4,7 @@ Where the Contest Keeper work stands and what to do next. Per-repo details are i
 
 ## Plan to 100% (added 2026-11-25)
 
-The remaining implementation work runs as lanes L8 (ck-os crates), L9 (ck-os image, Mint and Fedora profiles, dm-verity, approved as decision 15), L10 (ck-forge egui, updater, macOS extras) and L11 (process and the final test checklist). Lane files are in the workspace `sessions/parallel/`. After they merge, testing starts from `docs/test-checklist.md`.
+The remaining implementation work runs as lanes L8 (ck-os crates), L9 (ck-os image, Mint and Fedora profiles, dm-verity, approved as decision 15), L10 (ck-forge egui, updater, macOS extras) and L11 (process and the final test checklist). Lane files are in the workspace `sessions/parallel/`. Testing starts from [test-checklist.md](test-checklist.md); items that wait for a lane say which one.
 
 ## What is done
 
@@ -17,23 +17,33 @@ The remaining implementation work runs as lanes L8 (ck-os crates), L9 (ck-os ima
 
 ## What needs a person
 
-| Item | Repo | Detail |
+Everything is listed with steps and expected results in [test-checklist.md](test-checklist.md). Summary:
+
+| Item | Repo | Checklist |
 |---|---|---|
-| Approve the dm-verity design | ck-os | `docs/verity-and-signed-uki.md` |
-| Mint and Fedora boot tests (#29) | ck-os | UEFI, Secure Boot, BIOS on real hardware |
-| Real stick write tests, G4 | ck-forge, ck-hub | macOS and Windows checklists in `ck-forge/docs/testing-the-writer.md` |
-| Windows parity tests, then decide R6.3 | ck-forge | `docs/egui-parity.md` |
-| Packaged-VM tests (#24, #32 to #34) | ck-forge | Windows with Hyper-V or QEMU, `ck-vmtest` |
-| Capacity run, 50 to 100 sticks | ck-hub | approved, cap 5 USD, see `docs/user-checks.md` |
-| Licence approval (#31), Canonical question | ck-os | `docs/licences.md` |
-| Numbered Forge release, code signing | ck-forge | pre-releases build on every merge |
+| Debian, Mint, Fedora boots on real laptops (UEFI, Secure Boot, BIOS) | ck-os | OS-1 to OS-3 (Mint and Fedora after lane L9 merges the profiles) |
+| Secure Boot with MOK enrolment, dm-verity tamper test | ck-os | OS-4, OS-5 (after L9 merges R2.2a to R2.2d); add the signing key to the CI secrets (D-2) |
+| Bluetooth and USB-storage options take effect, items that need a booted image | ck-os | OS-6 to OS-8 |
+| Real stick write on macOS and Windows | ck-forge | F-1, F-2 |
+| Windows parity rows, updater install-over, then decide R6.3 | ck-forge | F-3, F-4, F-6 |
+| Packaged-VM tests (#24, #32 to #34) | ck-forge | F-5 |
+| G4 acceptance, recordings round trip, capacity run (cap 5 USD) | ck-hub | H-1 to H-3 |
+| Dev Hub signing key and Azure state against Terraform | ck-hub, ck-infra | H-6, H-7 |
+| macOS download button (needs a release carrying `keeper-forge-macos-universal.zip`) | ck-website | W-1 |
+| Licence approval (#31), Canonical question, numbered release, code signing, housekeeping deletions, Azure decisions | all | D-1 to D-6 |
+
+## Reports written by the process lane (2026-11-25)
+
+In the workspace folder `sessions/` (not a git repository): `housekeeping-2026-11-25.md` (proposed deletions, nothing deleted),
+`azure-tab-vs-terraform-2026-11-25.md` (the flows artifact and live Azure could not be read from the session) and
+`hub-route-coverage-2026-11-25.md` (every Hub route against its tests, gaps, and the signed-settings flow).
 
 ## Items for the process lane (need the Windows workspace files)
 
 These need `sessions/`, `IMPLEMENTATION-PLAN.md`, `DECISIONS.md` and the flows artifact from the Windows machine:
-- re-run the housekeeping audit and apply the approved deletions,
-- keep the plan ticks true,
-- Azure tab versus `ck-infra` Terraform, and the Hub route coverage matrix.
+- apply the housekeeping deletions you approve (the audit is `sessions/housekeeping-2026-11-25.md`),
+- keep the plan ticks true as the lanes merge,
+- the Azure tab comparison needs the flows artifact shared with the Claude Code account and an `az` login on the Contest Keeper subscription.
 
 ## Working rules that were used
 
