@@ -2,6 +2,10 @@
 
 Where the Contest Keeper work stands and what to do next. Per-repo details are in `docs/next-steps.md` of `ck-os`, `ck-forge` and `ck-hub`.
 
+## Plan to 100% (added 2026-11-25)
+
+The remaining implementation work runs as lanes L8 (ck-os crates), L9 (ck-os image, Mint and Fedora profiles, dm-verity, approved as decision 15), L10 (ck-forge egui, updater, macOS extras) and L11 (process and the final test checklist). Lane files are in the workspace `sessions/parallel/`. After they merge, testing starts from `docs/test-checklist.md`.
+
 ## What is done
 
 - Lanes L1 to L7 ran in parallel: ck-os, hub and infra, forge and protocol, process, Forge on macOS, the Hub images page, and a layout walkthrough of Hub and website.
