@@ -30,11 +30,22 @@ jobs:
       # that rustup would replace with the pin on the first cargo call.
       - run: rustup toolchain install --profile minimal
       - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
       - name: Start PostgreSQL for the store tests
         if: inputs.postgres
         run: |
+          # Disable fsync on this throwaway test database and start it before clippy so it boots
+          # while clippy compiles.
           docker run -d --name ck-test-db -p 54329:5432 \
-            -e POSTGRES_PASSWORD=ck-test-only -e POSTGRES_DB=ckhub postgres:16-alpine
+            -e POSTGRES_PASSWORD=ck-test-only -e POSTGRES_DB=ckhub postgres:16-alpine \
+            -c fsync=off -c synchronous_commit=off -c full_page_writes=off
+          echo "CK_TEST_DATABASE_URL=postgres://postgres:ck-test-only@127.0.0.1:54329/ckhub" >> "$GITHUB_ENV"
+          # Tests must fail, not pass silently, when the database is missing (conventions/testing.md).
+          echo "CK_TEST_DATABASE_REQUIRED=1" >> "$GITHUB_ENV"
+      - run: cargo clippy --locked --all-targets --all-features -- -D warnings
+      - name: Wait for PostgreSQL
+        if: inputs.postgres
+        run: |
           # The image first starts a temporary server on its socket only, then restarts. Asking over
           # TCP waits for the final server.
           for _ in $(seq 1 30); do
@@ -42,11 +53,6 @@ jobs:
             sleep 1
           done
           docker exec ck-test-db pg_isready -h 127.0.0.1 -U postgres -d ckhub
-          echo "CK_TEST_DATABASE_URL=postgres://postgres:ck-test-only@127.0.0.1:54329/ckhub" >> "$GITHUB_ENV"
-          # Tests must fail, not pass silently, when the database is missing (conventions/testing.md).
-          echo "CK_TEST_DATABASE_REQUIRED=1" >> "$GITHUB_ENV"
-      - run: cargo fmt --all --check
-      - run: cargo clippy --locked --all-targets --all-features -- -D warnings
       - name: Install cargo-nextest
         if: inputs.nextest
         uses: taiki-e/install-action@v2

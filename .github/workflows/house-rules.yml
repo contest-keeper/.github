@@ -23,11 +23,17 @@ jobs:
       - uses: actions/checkout@v7
         with:
           path: repo
+          sparse-checkout: |
+            ${{ inputs.agents-file }}
+            CLAUDE.md
+          sparse-checkout-cone-mode: false
       - uses: actions/checkout@v7
         with:
           repository: contest-keeper/.github
           ref: main
           path: shared
+          sparse-checkout: conventions/agents.md
+          sparse-checkout-cone-mode: false
       - name: Compare the shared block
         env:
           AGENTS_FILE: ${{ inputs.agents-file }}

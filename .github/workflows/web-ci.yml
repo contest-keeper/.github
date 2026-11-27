@@ -27,7 +27,23 @@ jobs:
           cache: pnpm
           cache-dependency-path: ${{ inputs.working-directory }}/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm check
-      - run: pnpm test
+      - name: Run lint, check, and test in parallel
+        run: |
+          # Run read-only checks concurrently with separate logs so output does not interleave.
+          tmp=$(mktemp -d)
+          trap 'rm -rf "$tmp"' EXIT
+          pnpm lint >"$tmp/lint.log" 2>&1 &
+          p_lint=$!
+          pnpm check >"$tmp/check.log" 2>&1 &
+          p_check=$!
+          pnpm test >"$tmp/test.log" 2>&1 &
+          p_test=$!
+          rc=0
+          wait "$p_lint" || rc=$?
+          cat "$tmp/lint.log"
+          wait "$p_check" || rc=$?
+          cat "$tmp/check.log"
+          wait "$p_test" || rc=$?
+          cat "$tmp/test.log"
+          exit "$rc"
       - run: pnpm build
